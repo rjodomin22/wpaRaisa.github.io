@@ -1,55 +1,28 @@
-const indexes = document.querySelectorAll(".indexes li");
-const tabs = document.querySelectorAll(".tab");
-const contents = document.querySelectorAll(".tab-content");
-const modal = document.getElementById("modal");
-const modalText = document.getElementById("modal-text");
-const span = document.getElementsByClassName("close")[0];
+$(document).ready(function () {
+  $(".gallery ul li a").click(function (event) {
+    event.preventDefault();
+    var itemID = $(this).attr("href");
 
-function reset() {
-  for (let i = 0; i < tabs.length; i++) {
-    indexes[i].style.borderColor = "transparent";
-    tabs[i].style.zIndex = 0;
-    tabs[i].classList.remove("active");
-    contents[i].classList.remove("active");
-  }
-}
+    // Cerrar cualquier item abierto
+    $(".port").removeClass("item_open");
+    $(".gallery ul").removeClass("item_open");
 
-function showTab(i) {
-  indexes[i].style.borderColor = "rgba(211,38,38,0.6)";
-  tabs[i].style.opacity = 1;
-  tabs[i].style.zIndex = 5;
-  tabs[i].classList.add("active");
-  contents[i].classList.add("active");
-}
+    // Abrir el item clicado
+    $(itemID).addClass("item_open");
+    $(".gallery ul").addClass("item_open");
 
-function activate(e) {
-  if (!e.target.matches(".indexes li")) return;
-  reset();
-  showTab(e.target.dataset.index);
-}
+    // Desplazarse al inicio de la página
+    $("html, body").animate(
+      {
+        scrollTop: parseInt($("#top").offset().top),
+      },
+      400
+    );
+  });
 
-const init = () => showTab(0);
-
-window.addEventListener("load", init, false);
-window.addEventListener("click", activate, false);
-
-// Modal functionality
-const readMoreButtons = document.querySelectorAll(".read-more");
-
-readMoreButtons.forEach((button) => {
-  button.addEventListener("click", function () {
-    const fullText = this.getAttribute("data-fulltext");
-    modalText.textContent = fullText;
-    modal.style.display = "block";
+  $(".close").click(function (event) {
+    event.preventDefault();
+    $(".port").removeClass("item_open");
+    $(".gallery ul").removeClass("item_open");
   });
 });
-
-span.onclick = function () {
-  modal.style.display = "none";
-};
-
-window.onclick = function (event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-};
